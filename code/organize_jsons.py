@@ -8,7 +8,7 @@ import glob
 import json
 from datetime import date 
 
-datadir = '/work/zelinka1/git/assessed-cloud-fbks/data/'
+datadir = '../data/'
 
 def organize_fbk_jsons(new_dict,mo,ripf):
 

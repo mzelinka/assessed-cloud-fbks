@@ -1,6 +1,7 @@
 import cal_CloudRadKernel as CRK
 import organize_jsons as OJ
 import cld_fbks_ecs_assessment_v3 as dataviz
+import os
 
 # USER INPUT:
 #================================================================================================
@@ -35,6 +36,7 @@ updated_err_dict = OJ.organize_err_jsons(err_dict,model,variant)
 updated_fbk_dict = OJ.organize_fbk_jsons(fbk_dict,model,variant)
 
 # plot this model alongside other models and expert assessment:
+os.system('mkdir ../figures/')
 result = dataviz.make_all_figs(updated_fbk_dict,updated_err_dict,model)
 
 print('Done!')

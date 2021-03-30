@@ -16,7 +16,7 @@ from genutil import grower
 import bony_analysis as BA
 import zelinka_analysis as ZA
 
-datadir='/work/zelinka1/git/assessed-cloud-fbks/data/'
+datadir='../data/'
 
 # Define a python dictionary containing the sections of the histogram to consider
 # These are the same as in Zelinka et al, GRL, 2016
