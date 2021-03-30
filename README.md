@@ -1,14 +1,19 @@
 # assessed-cloud-fbks
-Code to compare GCM and expert-assessed cloud feedback components
 
-Step 1: Install CDAT via conda:
+This code compares GCM cloud feedback components to expert-assessed feedbacks assessed by Sherwood et al (2020). To use, follow these steps:
 
-Step 2: Activate this environment:
-conda activate cdat82
+1. Install CDAT via conda following [these instructions](https://github.com/CDAT/cdat/wiki/install#installing-latest-cdat---821)
 
-Step 3: In main.py, update the dictionary so it points to your model's amip and amip-p4K files.
+2. Activate this environment:
+```
+conda activate cdat
+```
 
-Step 4: Run the code:
+3. In main.py, update the dictionary so it points to your model's amip and amip-p4K files.
+
+4. Run the code:
+```
 python main.py
+```
 
-Step 5: Inspect the figures and tables in the /figures/ directory
+5. Inspect the generated figures and tables in the /figures/ directory.
