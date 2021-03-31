@@ -10,7 +10,7 @@ conda activate cdat
 ```
 3. cd to /code/
 
-4. In main.py, update the dictionary so it points to your model's amip and amip-p4K files.
+4. In main.py, update the "User Input" section so it points to your model's amip and amip-p4K files.
 
 5. Run the code:
 ```
