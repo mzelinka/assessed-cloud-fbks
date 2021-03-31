@@ -5,28 +5,33 @@ import os
 
 # USER INPUT:
 #================================================================================================
-model = 'YOUR_MODEL'
+model = 'GFDL-CM4'	
+institution = 'NOAA-GFDL'
 variant = 'r1i1p1f1'
-filenames={}
-filenames['amip']={}
-filenames['amip-p4K']={}
-path = '/p/user_pub/xclim/CMIP6/CMIP/amip/atmos/mon/'
-path4K = '/p/user_pub/xclim/CMIP6/CFMIP/amip-p4K/atmos/mon/'
-
-filenames['amip']['tas'] = path+'tas/CMIP6.CMIP.amip.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.tas.atmos.glb-z1-gr1.v20180701.0000000.0.xml'
-filenames['amip']['rsdscs'] = path+'rsdscs/CMIP6.CMIP.amip.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.rsdscs.atmos.glb-2d-gr1.v20180701.0000000.0.xml'
-filenames['amip']['rsuscs'] = path+'rsuscs/CMIP6.CMIP.amip.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.rsuscs.atmos.glb-2d-gr1.v20180701.0000000.0.xml'
-filenames['amip']['wap'] = path+'wap/CMIP6.CMIP.amip.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.wap.atmos.glb-p19-gr1.v20180701.0000000.0.xml'
-filenames['amip']['clisccp'] = path+'clisccp/CMIP6.CMIP.amip.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.clisccp.atmos.glb-p7c-gr1.v20180701.0000000.0.xml'
-
-filenames['amip-p4K']['tas'] = path4K+'tas/CMIP6.CFMIP.amip-p4K.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.tas.atmos.glb-z1-gr1.v20180701.0000000.0.xml'
-filenames['amip-p4K']['rsdscs'] = path4K+'rsdscs/CMIP6.CFMIP.amip-p4K.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.rsdscs.atmos.glb-2d-gr1.v20180701.0000000.0.xml'
-filenames['amip-p4K']['rsuscs'] = path4K+'rsuscs/CMIP6.CFMIP.amip-p4K.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.rsuscs.atmos.glb-2d-gr1.v20180701.0000000.0.xml'
-filenames['amip-p4K']['wap'] = path4K+'wap/CMIP6.CFMIP.amip-p4K.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.wap.atmos.glb-p19-gr1.v20180701.0000000.0.xml'
-filenames['amip-p4K']['clisccp'] = path4K+'clisccp/CMIP6.CFMIP.amip-p4K.NOAA-GFDL.GFDL-CM4.r1i1p1f1.mon.clisccp.atmos.glb-p7c-gr1.v20180701.0000000.0.xml'
+grid_label = 'gr1'
+version = 'v20180701'
+path = '/p/css03/esgf_publish/CMIP6'
 #================================================================================================
 
-    
+
+# generate xmls pointing to the cmorized netcdf files 
+os.system('mkdir ../xmls/')
+filenames={}
+for exp in ['amip','amip-p4K']:
+    filenames[exp]={}
+    if exp=='amip':
+        activity = 'CMIP'
+    else:
+        activity = 'CFMIP'
+    for field in ['tas','rsdscs','rsuscs','wap','clisccp']:
+        if field=='clisccp':
+            table='CFmon'
+        else:
+            table='Amon'
+        searchstring = path+'/'+activity+'/'+institution+'/'+model+'/'+exp+'/'+variant+'/'+table+'/'+field+'/'+grid_label+'/'+version+'/*.nc'
+        xmlname = '../xmls/'+exp+'.'+model+'.'+variant+'.'+field+'.'+version+'.xml'
+        os.system('cdscan -x '+xmlname+' '+searchstring)
+        filenames[exp][field] = xmlname
 
 # calculate all feedback components and Klein et al (2013) error metrics:
 fbk_dict,err_dict = CRK.CloudRadKernel(filenames) 

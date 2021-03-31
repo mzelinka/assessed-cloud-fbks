@@ -183,6 +183,8 @@ def do_klein_calcs(ctl_clisccp,LWK,SWK,obs_clisccp_AC,ctl_clisccp_wap,LWK_wap,SW
 def get_amip_data(filename,var,lev=None):
     # load in cmip data using the appropriate function for the experiment/mip
 
+    print('        '+var)
+
     tslice = ("1983-01-01","2008-12-31") # we only want this portion of the amip run (overlap with all AMIPs and ISCCP)
     f=cdms.open(filename[var])
     if lev:
@@ -217,12 +219,14 @@ def get_CRK_data(filenames):
     # Read in data, regrid and map kernels to lat/lon
     
     # Load in regridded monthly mean climatologies from control and perturbed simulation
+    print('    amip')
     ctl_tas = get_amip_data(filenames['amip'],'tas')
     ctl_rsdscs = get_amip_data(filenames['amip'],'rsdscs')
     ctl_rsuscs = get_amip_data(filenames['amip'],'rsuscs')
     ctl_wap = get_amip_data(filenames['amip'],'wap',50000)
     ctl_clisccp = get_amip_data(filenames['amip'],'clisccp')
     
+    print('    amip-p4K')
     fut_tas = get_amip_data(filenames['amip-p4K'],'tas')
     fut_rsdscs = get_amip_data(filenames['amip-p4K'],'rsdscs')
     fut_rsuscs = get_amip_data(filenames['amip-p4K'],'rsuscs')
@@ -271,6 +275,7 @@ def get_CRK_data(filenames):
     # compute annual averages
     avgdtas = YEAR(avgdtas0)
 
+    print('    sort into omega500 bins')
     ctl_wap_ocean,ctl_wap_land = apply_land_mask_v2(TR.select(ctl_wap))
     fut_wap_ocean,fut_wap_land = apply_land_mask_v2(TR.select(fut_wap))
     ctl_OKwaps = BA.bony_sorting_part1(ctl_wap_ocean,binedges)
@@ -538,7 +543,7 @@ def YEAR(data):
 ###############################################################################################
 def CloudRadKernel(filenames):
 
-    print('   Loading in data')
+    print('Loading in data')
     ctl_clisccp,fut_clisccp,LWK,SWK,dTs,ctl_clisccp_wap,fut_clisccp_wap,LWK_wap,SWK_wap,ctl_N,fut_N = get_CRK_data(filenames)
        
     # Create a dummy variable so we don't have keep calling the land mask function:
@@ -546,14 +551,14 @@ def CloudRadKernel(filenames):
     OCN,LND = apply_land_mask_v2(dummy)
     area_wts = get_area_wts(ctl_clisccp[:12,0,0,:]) # summing this over lat and lon = 1
     
-    print('   Computing Klein et al error metrics')
+    print('Computing Klein et al error metrics')
     ###########################################################################
     # Compute Klein et al cloud error metrics and their breakdown into components
     ###########################################################################  
     KEM_dict = do_klein_calcs(ctl_clisccp,LWK,SWK,obs_clisccp_AC,ctl_clisccp_wap,LWK_wap,SWK_wap,obs_clisccp_AC_wap,obs_N_AC_wap)
     # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]
 
-    print('   Computing feedbacks')
+    print('Computing feedbacks')
     ###########################################################################
     # Compute cloud feedbacks and their breakdown into components
     ###########################################################################         
@@ -568,7 +573,7 @@ def CloudRadKernel(filenames):
     # The following performs the amount/altitude/optical depth decomposition of
     # Zelinka et al., J Climate (2012b), as modified in Zelinka et al., J. Climate (2013)    
     for sec in sections:
-        print('      for section '+sec)
+        print('    for section '+sec)
         # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]       
         fbk_dict[sec] = {}
         
