@@ -275,7 +275,7 @@ def get_CRK_data(filenames):
     # compute annual averages
     avgdtas = YEAR(avgdtas0)
 
-    print('    sort into omega500 bins')
+    print('Sort into omega500 bins')
     ctl_wap_ocean,ctl_wap_land = apply_land_mask_v2(TR.select(ctl_wap))
     fut_wap_ocean,fut_wap_land = apply_land_mask_v2(TR.select(fut_wap))
     ctl_OKwaps = BA.bony_sorting_part1(ctl_wap_ocean,binedges)
