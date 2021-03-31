@@ -2,15 +2,15 @@
 
 This code compares GCM cloud feedback components to expert-assessed feedbacks assessed by [Sherwood et al. (2020)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019RG000678). To use, follow these steps:
 
-1. Clone this repo:
-```
-git clone https://github.com/mzelinka/assessed-cloud-fbks.git
-```
-2. Install CDAT via conda following [these instructions](https://github.com/CDAT/cdat/wiki/install#installing-latest-cdat---821)
+1. Install CDAT via conda following [these instructions](https://github.com/CDAT/cdat/wiki/install#installing-latest-cdat---821)
 
-3. Activate this environment:
+2. Activate this environment:
 ```
 conda activate cdat
+```
+3. Clone this repo:
+```
+git clone https://github.com/mzelinka/assessed-cloud-fbks.git
 ```
 4. cd to /code/
 
