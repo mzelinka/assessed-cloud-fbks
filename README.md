@@ -12,7 +12,7 @@ conda activate cdat
 ```
 git clone https://github.com/mzelinka/assessed-cloud-fbks.git
 ```
-4. cd to /code/
+4. cd to assessed-cloud-fbks/code/
 
 5. In main.py, update the "User Input" section so it points to your model's amip and amip-p4K files.
 
