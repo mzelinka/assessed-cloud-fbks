@@ -29,11 +29,13 @@ for exp in exp_list:
     else:
         activity = 'CFMIP'
     for field in ['tas','rsdscs','rsuscs','wap','clisccp']:
+        """
         if field=='clisccp':
             table='CFmon'
         else:
             table='Amon'
         searchstring = path+'/'+activity+'/'+institution+'/'+model+'/'+exp+'/'+variant+'/'+table+'/'+field+'/'+grid_label+'/'+version+'/*.nc'
+        """
         xmlname = '../xmls/'+exp+'.'+model+'.'+variant+'.'+field+'.'+version+'.xml'
         #os.system('cdscan -x '+xmlname+' '+searchstring)
         filenames[exp][field] = xmlname
