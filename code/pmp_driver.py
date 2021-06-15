@@ -47,6 +47,8 @@ with open('filenames.json', 'w') as f:
 # calculate all feedback components and Klein et al (2013) error metrics:
 fbk_dict, err_dict = CRK.CloudRadKernel(filenames) 
 
+print('calc done')
+
 with open('fbk_dict.json', 'w') as f:
     json.dump(fbk_dict, f, sort_keys=True, indent=4)
 
