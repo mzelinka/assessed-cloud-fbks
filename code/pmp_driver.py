@@ -14,8 +14,8 @@ realization = 'r1i1p1f1'
 grid_label = 'gr1'
 version = 'v20180701'
 path = '/p/css03/esgf_publish/CMIP6'
-#exp_list = ['amip','amip-p4K']
-exp_list = ['amip']
+exp_list = ['amip','amip-p4K']
+#exp_list = ['amip']
 #================================================================================================
 
 
