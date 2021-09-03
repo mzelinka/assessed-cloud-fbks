@@ -34,14 +34,14 @@ for exp in ['amip','amip-p4K']:
         filenames[exp][field] = xmlname
 
 # calculate all feedback components and Klein et al (2013) error metrics:
-fbk_dict,err_dict = CRK.CloudRadKernel(filenames) 
+fbk_dict,obsc_fbk_dict,err_dict = CRK.CloudRadKernel(filenames) 
 
-# add this model to the pre-existing json file containing other model results:
-updated_err_dict = OJ.organize_err_jsons(err_dict,model,variant) 
-updated_fbk_dict = OJ.organize_fbk_jsons(fbk_dict,model,variant)
+# add this model to the pre-existing json file containing other model results: 
+updated_fbk_dict,updated_obsc_fbk_dict = OJ.organize_fbk_jsons(fbk_dict,obsc_fbk_dict,model,variant)
+updated_err_dict = OJ.organize_err_jsons(err_dict,model,variant)
 
 # plot this model alongside other models and expert assessment:
 os.system('mkdir ../figures/')
-result = dataviz.make_all_figs(updated_fbk_dict,updated_err_dict,model)
+result = dataviz.make_all_figs(updated_fbk_dict,updated_obsc_fbk_dict,updated_err_dict,model)
 
 print('Done!')
