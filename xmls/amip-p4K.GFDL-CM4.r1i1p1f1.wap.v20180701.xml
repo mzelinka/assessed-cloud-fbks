@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<!DOCTYPE dataset SYSTEM "http://www-pcmdi.llnl.gov/software/cdms/cdml.dtd">
+<dataset
+	id	="none"
+	history	="File was processed by fremetar (GFDL analog of CMOR). TripleID: [exper_id_xBXM0Sdl1C,realiz_id_vMmOty6YhX,run_id_752z64SjlO]
+[2021-9-3 0:29:18] /home/zelinka1/miniconda3/envs/cdat_test/bin/cdscan -x ../xmls/amip-p4K.GFDL-CM4.r1i1p1f1.wap.v20180701.xml /p/css03/esgf_publish/CMIP6/CFMIP/NOAA-GFDL/GFDL-CM4/amip-p4K/r1i1p1f1/Amon/wap/gr1/v20180701/wap_Amon_GFDL-CM4_amip-p4K_r1i1p1f1_gr1_197901-201412. ..."
+	comment	="&lt;null ref&gt;"
+	Conventions	="CF-1.7 CMIP-6.0 UGRID-1.0"
+	frequency	="mon"
+	institution	="National Oceanic and Atmospheric Administration, Geophysical Fluid Dynamics Laboratory, Princeton, NJ 08540, USA"
+	cdms_filemap	="[[[lat_bnds,lon_bnds],[[-,-,-,-,-,wap_Amon_GFDL-CM4_amip-p4K_r1i1p1f1_gr1_197901-201412.nc]]],[[wap,time_bnds],[[0,432,-,-,-,wap_Amon_GFDL-CM4_amip-p4K_r1i1p1f1_gr1_197901-201412.nc]]]]"
+	directory	="/p/css03/esgf_publish/CMIP6/CFMIP/NOAA-GFDL/GFDL-CM4/amip-p4K/r1i1p1f1/Amon/wap/gr1/v20180701/"
+	calendar	="noleap"
+	>
+	<attr name="external_variables" datatype="String">areacella</attr>
+	<attr name="table_id" datatype="String">Amon</attr>
+	<attr name="activity_id" datatype="String">CFMIP</attr>
+	<attr name="branch_method" datatype="String">none provided</attr>
+	<attr name="branch_time_in_child" datatype="Double">0.0</attr>
+	<attr name="contact" datatype="String">gfdl.climate.model.info@noaa.gov</attr>
+	<attr name="creation_date" datatype="String">2019-07-03T02:40:17Z</attr>
+	<attr name="data_specs_version" datatype="String">01.00.27</attr>
+	<attr name="experiment" datatype="String">AMIP with uniform 4K SST increase</attr>
+	<attr name="experiment_id" datatype="String">amip-p4K</attr>
+	<attr name="forcing_index" datatype="Long">1</attr>
+	<attr name="further_info_url" datatype="String">https://furtherinfo.es-doc.org/CMIP6.NOAA-GFDL.GFDL-CM4.amip-p4K.none.r1i1p1f1</attr>
+	<attr name="grid" datatype="String">atmos data regridded from Cubed-sphere (c96) to 180,288; interpolation method: conserve_order2</attr>
+	<attr name="grid_label" datatype="String">gr1</attr>
+	<attr name="initialization_index" datatype="Long">1</attr>
+	<attr name="institution_id" datatype="String">NOAA-GFDL</attr>
+	<attr name="license" datatype="String">CMIP6 model data produced by NOAA-GFDL is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses/). Consult https://pcmdi.llnl.gov/CMIP6/TermsOfUse for terms of use governing CMIP6 output, including citation requirements and proper acknowledgment. Further information about this data, including some limitations, can be found via the further_info_url (recorded as a global attribute in this file). The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.</attr>
+	<attr name="mip_era" datatype="String">CMIP6</attr>
+	<attr name="nominal_resolution" datatype="String">100 km</attr>
+	<attr name="parent_activity_id" datatype="String">no parent</attr>
+	<attr name="parent_experiment_id" datatype="String">no parent</attr>
+	<attr name="parent_mip_era" datatype="String">no parent</attr>
+	<attr name="parent_source_id" datatype="String">no parent</attr>
+	<attr name="parent_variant_label" datatype="String">no parent</attr>
+	<attr name="physics_index" datatype="Long">1</attr>
+	<attr name="product" datatype="String">model-output</attr>
+	<attr name="realization_index" datatype="Long">1</attr>
+	<attr name="realm" datatype="String">atmos</attr>
+	<attr name="source" datatype="String">GFDL-CM4 (2018): atmos: GFDL-AM4.0.1 (Cubed-sphere c96) - 1 degree nominal horizontal resolution; 360 x 180 longitude/latitude; 33 levels; top level 1 hPa); ocean: GFDL-OM4p25 (GFDL-MOM6, tripolar - nominal 0.25 deg; 1440 x 1080 longitude/latitude; 75 levels; top grid cell 0-2 m); seaIce: GFDL-SIM4p25 (GFDL-SIS2.0, tripolar - nominal 0.25 deg; 1440 x 1080 longitude/latitude; 5 layers; 5 thickness categories); land: GFDL-LM4.0.1; aerosol: interactive; atmosChem: fast chemistry, aerosol only; landIce: GFDL-LM4.0.1
+(GFDL ID: 2019_0323)</attr>
+	<attr name="source_id" datatype="String">GFDL-CM4</attr>
+	<attr name="source_type" datatype="String">AGCM AER</attr>
+	<attr name="sub_experiment" datatype="String">none</attr>
+	<attr name="sub_experiment_id" datatype="String">none</attr>
+	<attr name="title" datatype="String">NOAA GFDL GFDL-CM4 model output prepared for CMIP6 AMIP with uniform 4K SST increase</attr>
+	<attr name="tracking_id" datatype="String">hdl:21.14100/848bebda-da69-4602-a45d-19676b5a04aa</attr>
+	<attr name="variable_id" datatype="String">wap</attr>
+	<attr name="variant_info" datatype="String">N/A</attr>
+	<attr name="references" datatype="String">see further_info_url attribute</attr>
+	<attr name="variant_label" datatype="String">r1i1p1f1</attr>
+	<axis
+		id	="bnds"
+		datatype	="Double"
+		length	="2"
+		units	=""
+		long_name	="vertex number"
+		>
+		<attr name="realtopology" datatype="String">linear</attr>
+		[1. 2.]
+		</axis>
+	<axis
+		id	="lat"
+		datatype	="Double"
+		length	="180"
+		units	="degrees_north"
+		long_name	="latitude"
+		axis	="Y"
+		bounds	="lat_bnds"
+		>
+		<attr name="standard_name" datatype="String">latitude</attr>
+		<attr name="cell_methods" datatype="String">time: point</attr>
+		<attr name="realtopology" datatype="String">linear</attr>
+		[-89.5 -88.5 -87.5 -86.5 -85.5 -84.5 -83.5 -82.5 -81.5 -80.5 -79.5 -78.5
+ -77.5 -76.5 -75.5 -74.5 -73.5 -72.5 -71.5 -70.5 -69.5 -68.5 -67.5 -66.5
+ -65.5 -64.5 -63.5 -62.5 -61.5 -60.5 -59.5 -58.5 -57.5 -56.5 -55.5 -54.5
+ -53.5 -52.5 -51.5 -50.5 -49.5 -48.5 -47.5 -46.5 -45.5 -44.5 -43.5 -42.5
+ -41.5 -40.5 -39.5 -38.5 -37.5 -36.5 -35.5 -34.5 -33.5 -32.5 -31.5 -30.5
+ -29.5 -28.5 -27.5 -26.5 -25.5 -24.5 -23.5 -22.5 -21.5 -20.5 -19.5 -18.5
+ -17.5 -16.5 -15.5 -14.5 -13.5 -12.5 -11.5 -10.5  -9.5  -8.5  -7.5  -6.5
+  -5.5  -4.5  -3.5  -2.5  -1.5  -0.5   0.5   1.5   2.5   3.5   4.5   5.5
+   6.5   7.5   8.5   9.5  10.5  11.5  12.5  13.5  14.5  15.5  16.5  17.5
+  18.5  19.5  20.5  21.5  22.5  23.5  24.5  25.5  26.5  27.5  28.5  29.5
+  30.5  31.5  32.5  33.5  34.5  35.5  36.5  37.5  38.5  39.5  40.5  41.5
+  42.5  43.5  44.5  45.5  46.5  47.5  48.5  49.5  50.5  51.5  52.5  53.5
+  54.5  55.5  56.5  57.5  58.5  59.5  60.5  61.5  62.5  63.5  64.5  65.5
+  66.5  67.5  68.5  69.5  70.5  71.5  72.5  73.5  74.5  75.5  76.5  77.5
+  78.5  79.5  80.5  81.5  82.5  83.5  84.5  85.5  86.5  87.5  88.5  89.5]
+		</axis>
+	<axis
+		id	="lon"
+		datatype	="Double"
+		length	="288"
+		units	="degrees_east"
+		long_name	="longitude"
+		axis	="X"
+		bounds	="lon_bnds"
+		>
+		<attr name="standard_name" datatype="String">longitude</attr>
+		<attr name="cell_methods" datatype="String">time: point</attr>
+		<attr name="realtopology" datatype="String">circular</attr>
+		[  0.625   1.875   3.125   4.375   5.625   6.875   8.125   9.375  10.625
+  11.875  13.125  14.375  15.625  16.875  18.125  19.375  20.625  21.875
+  23.125  24.375  25.625  26.875  28.125  29.375  30.625  31.875  33.125
+  34.375  35.625  36.875  38.125  39.375  40.625  41.875  43.125  44.375
+  45.625  46.875  48.125  49.375  50.625  51.875  53.125  54.375  55.625
+  56.875  58.125  59.375  60.625  61.875  63.125  64.375  65.625  66.875
+  68.125  69.375  70.625  71.875  73.125  74.375  75.625  76.875  78.125
+  79.375  80.625  81.875  83.125  84.375  85.625  86.875  88.125  89.375
+  90.625  91.875  93.125  94.375  95.625  96.875  98.125  99.375 100.625
+ 101.875 103.125 104.375 105.625 106.875 108.125 109.375 110.625 111.875
+ 113.125 114.375 115.625 116.875 118.125 119.375 120.625 121.875 123.125
+ 124.375 125.625 126.875 128.125 129.375 130.625 131.875 133.125 134.375
+ 135.625 136.875 138.125 139.375 140.625 141.875 143.125 144.375 145.625
+ 146.875 148.125 149.375 150.625 151.875 153.125 154.375 155.625 156.875
+ 158.125 159.375 160.625 161.875 163.125 164.375 165.625 166.875 168.125
+ 169.375 170.625 171.875 173.125 174.375 175.625 176.875 178.125 179.375
+ 180.625 181.875 183.125 184.375 185.625 186.875 188.125 189.375 190.625
+ 191.875 193.125 194.375 195.625 196.875 198.125 199.375 200.625 201.875
+ 203.125 204.375 205.625 206.875 208.125 209.375 210.625 211.875 213.125
+ 214.375 215.625 216.875 218.125 219.375 220.625 221.875 223.125 224.375
+ 225.625 226.875 228.125 229.375 230.625 231.875 233.125 234.375 235.625
+ 236.875 238.125 239.375 240.625 241.875 243.125 244.375 245.625 246.875
+ 248.125 249.375 250.625 251.875 253.125 254.375 255.625 256.875 258.125
+ 259.375 260.625 261.875 263.125 264.375 265.625 266.875 268.125 269.375
+ 270.625 271.875 273.125 274.375 275.625 276.875 278.125 279.375 280.625
+ 281.875 283.125 284.375 285.625 286.875 288.125 289.375 290.625 291.875
+ 293.125 294.375 295.625 296.875 298.125 299.375 300.625 301.875 303.125
+ 304.375 305.625 306.875 308.125 309.375 310.625 311.875 313.125 314.375
+ 315.625 316.875 318.125 319.375 320.625 321.875 323.125 324.375 325.625
+ 326.875 328.125 329.375 330.625 331.875 333.125 334.375 335.625 336.875
+ 338.125 339.375 340.625 341.875 343.125 344.375 345.625 346.875 348.125
+ 349.375 350.625 351.875 353.125 354.375 355.625 356.875 358.125 359.375]
+		</axis>
+	<axis
+		id	="plev"
+		datatype	="Double"
+		length	="19"
+		units	="Pa"
+		long_name	="pressure"
+		axis	="Z"
+		positive	="down"
+		>
+		<attr name="standard_name" datatype="String">air_pressure</attr>
+		<attr name="description" datatype="String">There are 19  requested levels. If the upper levels are above the model top they should be omitted.</attr>
+		[100000.  92500.  85000.  70000.  60000.  50000.  40000.  30000.  25000.
+  20000.  15000.  10000.   7000.   5000.   3000.   2000.   1000.    500.
+    100.]
+		</axis>
+	<axis
+		id	="time"
+		datatype	="Double"
+		length	="432"
+		name_in_file	="time"
+		units	="days since 1979-01-01 00:00:00"
+		partition	="[  0 432]"
+		calendar	="noleap"
+		bounds	="time_bnds"
+		>
+		[   15.5    45.     74.5   105.    135.5   166.    196.5   227.5   258.
+   288.5   319.    349.5   380.5   410.    439.5   470.    500.5   531.
+   561.5   592.5   623.    653.5   684.    714.5   745.5   775.    804.5
+   835.    865.5   896.    926.5   957.5   988.   1018.5  1049.   1079.5
+  1110.5  1140.   1169.5  1200.   1230.5  1261.   1291.5  1322.5  1353.
+  1383.5  1414.   1444.5  1475.5  1505.   1534.5  1565.   1595.5  1626.
+  1656.5  1687.5  1718.   1748.5  1779.   1809.5  1840.5  1870.   1899.5
+  1930.   1960.5  1991.   2021.5  2052.5  2083.   2113.5  2144.   2174.5
+  2205.5  2235.   2264.5  2295.   2325.5  2356.   2386.5  2417.5  2448.
+  2478.5  2509.   2539.5  2570.5  2600.   2629.5  2660.   2690.5  2721.
+  2751.5  2782.5  2813.   2843.5  2874.   2904.5  2935.5  2965.   2994.5
+  3025.   3055.5  3086.   3116.5  3147.5  3178.   3208.5  3239.   3269.5
+  3300.5  3330.   3359.5  3390.   3420.5  3451.   3481.5  3512.5  3543.
+  3573.5  3604.   3634.5  3665.5  3695.   3724.5  3755.   3785.5  3816.
+  3846.5  3877.5  3908.   3938.5  3969.   3999.5  4030.5  4060.   4089.5
+  4120.   4150.5  4181.   4211.5  4242.5  4273.   4303.5  4334.   4364.5
+  4395.5  4425.   4454.5  4485.   4515.5  4546.   4576.5  4607.5  4638.
+  4668.5  4699.   4729.5  4760.5  4790.   4819.5  4850.   4880.5  4911.
+  4941.5  4972.5  5003.   5033.5  5064.   5094.5  5125.5  5155.   5184.5
+  5215.   5245.5  5276.   5306.5  5337.5  5368.   5398.5  5429.   5459.5
+  5490.5  5520.   5549.5  5580.   5610.5  5641.   5671.5  5702.5  5733.
+  5763.5  5794.   5824.5  5855.5  5885.   5914.5  5945.   5975.5  6006.
+  6036.5  6067.5  6098.   6128.5  6159.   6189.5  6220.5  6250.   6279.5
+  6310.   6340.5  6371.   6401.5  6432.5  6463.   6493.5  6524.   6554.5
+  6585.5  6615.   6644.5  6675.   6705.5  6736.   6766.5  6797.5  6828.
+  6858.5  6889.   6919.5  6950.5  6980.   7009.5  7040.   7070.5  7101.
+  7131.5  7162.5  7193.   7223.5  7254.   7284.5  7315.5  7345.   7374.5
+  7405.   7435.5  7466.   7496.5  7527.5  7558.   7588.5  7619.   7649.5
+  7680.5  7710.   7739.5  7770.   7800.5  7831.   7861.5  7892.5  7923.
+  7953.5  7984.   8014.5  8045.5  8075.   8104.5  8135.   8165.5  8196.
+  8226.5  8257.5  8288.   8318.5  8349.   8379.5  8410.5  8440.   8469.5
+  8500.   8530.5  8561.   8591.5  8622.5  8653.   8683.5  8714.   8744.5
+  8775.5  8805.   8834.5  8865.   8895.5  8926.   8956.5  8987.5  9018.
+  9048.5  9079.   9109.5  9140.5  9170.   9199.5  9230.   9260.5  9291.
+  9321.5  9352.5  9383.   9413.5  9444.   9474.5  9505.5  9535.   9564.5
+  9595.   9625.5  9656.   9686.5  9717.5  9748.   9778.5  9809.   9839.5
+  9870.5  9900.   9929.5  9960.   9990.5 10021.  10051.5 10082.5 10113.
+ 10143.5 10174.  10204.5 10235.5 10265.  10294.5 10325.  10355.5 10386.
+ 10416.5 10447.5 10478.  10508.5 10539.  10569.5 10600.5 10630.  10659.5
+ 10690.  10720.5 10751.  10781.5 10812.5 10843.  10873.5 10904.  10934.5
+ 10965.5 10995.  11024.5 11055.  11085.5 11116.  11146.5 11177.5 11208.
+ 11238.5 11269.  11299.5 11330.5 11360.  11389.5 11420.  11450.5 11481.
+ 11511.5 11542.5 11573.  11603.5 11634.  11664.5 11695.5 11725.  11754.5
+ 11785.  11815.5 11846.  11876.5 11907.5 11938.  11968.5 11999.  12029.5
+ 12060.5 12090.  12119.5 12150.  12180.5 12211.  12241.5 12272.5 12303.
+ 12333.5 12364.  12394.5 12425.5 12455.  12484.5 12515.  12545.5 12576.
+ 12606.5 12637.5 12668.  12698.5 12729.  12759.5 12790.5 12820.  12849.5
+ 12880.  12910.5 12941.  12971.5 13002.5 13033.  13063.5 13094.  13124.5]
+		</axis>
+	<variable
+		id	="lat_bnds"
+		datatype	="Double"
+		missing_value	="1e+20"
+		long_name	="latitude bounds"
+		units	="degrees_north"
+		axis	="Y"
+		>
+		<domain
+			>
+			<domElem name="lat" start="0" length="180"/>
+			<domElem name="bnds" start="0" length="2"/>
+			</domain>
+		</variable>
+	<variable
+		id	="lon_bnds"
+		datatype	="Double"
+		missing_value	="1e+20"
+		long_name	="longitude bounds"
+		units	="degrees_east"
+		axis	="X"
+		>
+		<domain
+			>
+			<domElem name="lon" start="0" length="288"/>
+			<domElem name="bnds" start="0" length="2"/>
+			</domain>
+		</variable>
+	<variable
+		id	="time_bnds"
+		datatype	="Double"
+		missing_value	="1e+20"
+		long_name	="time axis boundaries"
+		units	="days since 1979-01-01 00:00:00"
+		>
+		<domain
+			>
+			<domElem name="time" start="0" length="432"/>
+			<domElem name="bnds" start="0" length="2"/>
+			</domain>
+		</variable>
+	<variable
+		id	="wap"
+		datatype	="Float"
+		missing_value	="1e+20"
+		long_name	="omega (=dp/dt)"
+		units	="Pa s-1"
+		>
+		<attr name="_FillValue" datatype="Double">1e+20</attr>
+		<attr name="cell_methods" datatype="String">time: mean</attr>
+		<attr name="cell_measures" datatype="String">area: areacella</attr>
+		<attr name="standard_name" datatype="String">lagrangian_tendency_of_air_pressure</attr>
+		<attr name="interp_method" datatype="String">conserve_order2</attr>
+		<attr name="original_name" datatype="String">wap</attr>
+		<domain
+			>
+			<domElem name="time" start="0" length="432"/>
+			<domElem name="plev" start="0" length="19"/>
+			<domElem name="lat" start="0" length="180"/>
+			<domElem name="lon" start="0" length="288"/>
+			</domain>
+		</variable>
+	</dataset>

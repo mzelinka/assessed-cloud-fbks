@@ -1,4 +1,3 @@
-import MV2 as MV
 import numpy as np
 import MV2 as MV
 
