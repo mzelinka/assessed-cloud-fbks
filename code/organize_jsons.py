@@ -40,8 +40,6 @@ def organize_fbk_jsons(new_dict,new_obsc_dict,mo,ripf):
     return(old_dict,old_obsc_dict) # now updated to include info from input dictionary 
 
 
-
-
 def organize_err_jsons(new_dict,mo,ripf):
 
     # Load in the existing file containing pre-computed CMIP6 error metrics
@@ -70,5 +68,20 @@ def organize_err_jsons(new_dict,mo,ripf):
         # end sfc type loop
     # end region loop   
     old_dict['metadata'] = meta
+
+    return(old_dict) # now updated to include info from input dictionary 
+
+
+def organize_ecs_jsons(new_ecs,mo,ripf):
+
+    ##################################################################
+    # READ IN GREGORY ECS VALUES DERIVED IN ZELINKA ET AL (2020) GRL #
+    ##################################################################
+    f = open(datadir+'cmip56_forcing_feedback_ecs.json','r')
+    old_dict = json.load(f)
+    f.close()
+
+    if new_ecs!=None:
+        old_dict['CMIP6'][mo][ripf]['ECS'] = new_ecs
 
     return(old_dict) # now updated to include info from input dictionary 

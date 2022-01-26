@@ -31,8 +31,11 @@ bounds = np.arange(2.5,6.5,0.5)#[0,1.5,2.5,3.5,4.5,6]
 norm = mpl.colors.BoundaryNorm(bounds, cmap.N) 
 
 # 5,17,83,95 percentiles of the Baseline posterior ECS from Table 10 (p. 67) of Sherwood et al (2020):
-wcrp_bounds = [1.5,2.3,2.6,3.9,4.7,6]
-wcrp_cmap = mpl.colors.ListedColormap(['blue','cyan', 'white', 'orange', 'red'])
+wcrp_bounds = [2.3,2.6,3.9,4.7]
+wcrp_cmap = mpl.colors.ListedColormap(['cyan', 'white', 'orange'])
+# set over-color to last color of list 
+wcrp_cmap.set_over('red')
+wcrp_cmap.set_under('blue')
 wcrp_norm = mpl.colors.BoundaryNorm(wcrp_bounds, wcrp_cmap.N) 
 
 BOUNDS0 = bounds
@@ -406,8 +409,8 @@ def horiz_shade(fbk,err,xlabloc=False):
     ymax1 = fbk + 1.64*err
     ymin2 = fbk - 0.95*err
     ymax2 = fbk + 0.95*err
-    plt.fill_between(dummyx,ymin1,ymax1,color='k',alpha=0.1)
-    plt.fill_between(dummyx,ymin2,ymax2,color='k',alpha=0.1)
+    plt.fill_between(dummyx,ymin1,ymax1,color='0.9')
+    plt.fill_between(dummyx,ymin2,ymax2,color='0.8')
     plt.axhline(fbk,ls='--',color='k',lw=2)
     if xlabloc:
         plt.text(xlabloc,ymin1,' 5%',fontsize=9,ha='center',va='center')
@@ -554,7 +557,7 @@ def static_plot(assessed,ecs,models,fbk_names,gen,fig,gs):
 
 
 #######################################################   
-def make_all_figs(cld_fbks6,obsc_cld_fbks6,cld_errs6,newmod):
+def make_all_figs(cld_fbks6,obsc_cld_fbks6,cld_errs6,ecs_dict56,newmod):
 
     # Set a unique marker for your new model
     MARK[newmod] = '<'
@@ -577,14 +580,18 @@ def make_all_figs(cld_fbks6,obsc_cld_fbks6,cld_errs6,newmod):
     cld_errs5 = json.load(f)
     f.close()
     
+    """
     ##################################################################
     # READ IN GREGORY ECS VALUES DERIVED IN ZELINKA ET AL (2020) GRL #
     ##################################################################
     f = open(datadir+'cmip56_forcing_feedback_ecs.json','r')
     ecs = json.load(f)
     f.close()
-    ecs_dict5 = ecs['CMIP5']
+    ecs_dict5 = ecs['CMIP5']    
     ecs_dict6 = ecs['CMIP6']
+    """
+    ecs_dict5 = ecs_dict56['CMIP5']    
+    ecs_dict6 = ecs_dict56['CMIP6']
     
     # Get the assessed and unassessed feedbacks:
     assessed5,unassessed5,ufbk_names5,ECS5,models5,ripfs5,E_TCA5,E_ctpt5,E_LW5,E_SW5,E_NET5 = get_fbks(cld_fbks5,obsc_cld_fbks5,cld_errs5,ecs_dict5)
