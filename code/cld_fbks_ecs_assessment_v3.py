@@ -232,9 +232,9 @@ def get_gcm_assessed_fbks(fbk_dict,obsc_fbk_dict):
     #===========================================
     # unobscured low cloud amount + high cloud amount + ∆obscuration
     LW = fbk_dict['eq90']['lnd']['HI680']['LWcld_amt'] + obsc_fbk_dict['eq90']['lnd']['LO680']['LWcld_amt'] +  \
-                                                         obsc_fbk_dict['eq30']['lnd']['LO680']['LWdobsc_fbk']
+                                                         obsc_fbk_dict['eq90']['lnd']['LO680']['LWdobsc_fbk']
     SW = fbk_dict['eq90']['lnd']['HI680']['SWcld_amt'] + obsc_fbk_dict['eq90']['lnd']['LO680']['SWcld_amt'] +  \
-                                                         obsc_fbk_dict['eq30']['lnd']['LO680']['SWdobsc_fbk']
+                                                         obsc_fbk_dict['eq90']['lnd']['LO680']['SWdobsc_fbk']
     assessed.append(LW+SW)
 
     # 5) Middle latitude cloud amount feedback
