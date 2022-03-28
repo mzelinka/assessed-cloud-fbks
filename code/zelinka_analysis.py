@@ -1,4 +1,3 @@
-import MV2 as MV
 import numpy as np
 import MV2 as MV
 
@@ -103,18 +102,19 @@ def KT_decomposition_general(c1,c2,Klw,Ksw):
     dRsw_dtau = MV.where(RR,0,dRsw_dtau)
     dRsw_resid = MV.where(RR,0,dRsw_resid)
 
-    # Move month axis back to the beginning 
-    dRlw_true = MV.array(np.moveaxis(dRlw_true,-1,0))
-    dRlw_prop = MV.array(np.moveaxis(dRlw_prop,-1,0))
-    dRlw_dctp = MV.array(np.moveaxis(dRlw_dctp,-1,0))
-    dRlw_dtau = MV.array(np.moveaxis(dRlw_dtau,-1,0))
-    dRlw_resid = MV.array(np.moveaxis(dRlw_resid,-1,0))
-    dRsw_true = MV.array(np.moveaxis(dRsw_true,-1,0))
-    dRsw_prop = MV.array(np.moveaxis(dRsw_prop,-1,0))
-    dRsw_dctp = MV.array(np.moveaxis(dRsw_dctp,-1,0))
-    dRsw_dtau = MV.array(np.moveaxis(dRsw_dtau,-1,0))
-    dRsw_resid = MV.array(np.moveaxis(dRsw_resid,-1,0))
-    dc_star = MV.array(np.moveaxis(dc_star,-1,0))
-    dc_prop = MV.array(np.moveaxis(dc_prop,-1,0))
+    # Move month axis back to the beginning
+    output={}
+    output['LWcld_tot'] = MV.array(np.moveaxis(dRlw_true,-1,0))
+    output['LWcld_amt'] = MV.array(np.moveaxis(dRlw_prop,-1,0))
+    output['LWcld_alt'] = MV.array(np.moveaxis(dRlw_dctp,-1,0))
+    output['LWcld_tau'] = MV.array(np.moveaxis(dRlw_dtau,-1,0))
+    output['LWcld_err'] = MV.array(np.moveaxis(dRlw_resid,-1,0))
+    output['SWcld_tot'] = MV.array(np.moveaxis(dRsw_true,-1,0))
+    output['SWcld_amt'] = MV.array(np.moveaxis(dRsw_prop,-1,0))
+    output['SWcld_alt'] = MV.array(np.moveaxis(dRsw_dctp,-1,0))
+    output['SWcld_tau'] = MV.array(np.moveaxis(dRsw_dtau,-1,0))
+    output['SWcld_err'] = MV.array(np.moveaxis(dRsw_resid,-1,0))
+    #output['dc_star'] = MV.array(np.moveaxis(dc_star,-1,0))
+    #output['dc_prop'] = MV.array(np.moveaxis(dc_prop,-1,0))    
     
-    return (dRlw_true,dRlw_prop,dRlw_dctp,dRlw_dtau,dRlw_resid,dRsw_true,dRsw_prop,dRsw_dctp,dRsw_dtau,dRsw_resid,dc_star,dc_prop)
+    return output

@@ -7,6 +7,8 @@
 # to expert-assessed values from Sherwood et al (2020)
 #=============================================
 
+#IMPORT STUFF:
+#=====================
 import cdms2 as cdms
 import cdutil
 import MV2 as MV
@@ -180,6 +182,21 @@ def do_klein_calcs(ctl_clisccp,LWK,SWK,obs_clisccp_AC,ctl_clisccp_wap,LWK_wap,SW
     return(KEM_dict)    
     
 ###########################################################################        
+def do_obscuration_calcs(CTL,FUT,Klw,Ksw,DT):
+
+    (L_R_bar,dobsc,dunobsc,dobsc_cov) = obscuration_terms3(CTL,FUT)
+
+    # Get unobscured low-cloud feedbacks and those caused by change in obscuration        
+    ZEROS = np.zeros(L_R_bar.shape)        
+    dummy,L_R_bar_base = compute_fbk(L_R_bar,L_R_bar,DT) 
+    dobsc_fbk,dummy = compute_fbk(ZEROS,dobsc,DT)
+    dunobsc_fbk,dummy = compute_fbk(ZEROS,dunobsc,DT)
+    dobsc_cov_fbk,dummy = compute_fbk(ZEROS,dobsc_cov,DT)
+    obsc_output = obscuration_feedback_terms_general(L_R_bar_base,dobsc_fbk,dunobsc_fbk,dobsc_cov_fbk,Klw,Ksw)
+    
+    return(obsc_output)
+        
+###########################################################################        
 def get_amip_data(filename,var,lev=None):
     # load in cmip data using the appropriate function for the experiment/mip
 
@@ -288,21 +305,12 @@ def get_CRK_data(filenames):
     TLK = TR.select(LWkernel_map)
     TSK = TR.select(SWkernel_map)
     
-    sh = list(ctl_clisccp.shape[:-2])
-    sh.append(3+len(binedges)) # add 2 for the exceedances, 1 for land
-    ctl_clisccp_wap = nanarray((sh))
-    fut_clisccp_wap = nanarray((sh))
-    LWK_wap = nanarray((sh))
-    SWK_wap = nanarray((sh))
-    for T in range(7):
-        for P in range(7):
-            ctl_clisccp_wap[:,T,P,:], ctl_N = BA.bony_sorting_part2(ctl_OKwaps,TCC[:,T,P,:],ctl_wap_land,WTS,binedges)
-            fut_clisccp_wap[:,T,P,:], fut_N = BA.bony_sorting_part2(fut_OKwaps,TFC[:,T,P,:],fut_wap_land,WTS,binedges)
-            LWK_wap[:,T,P,:], P_wapbin = BA.bony_sorting_part2(ctl_OKwaps,TLK[:,T,P,:],ctl_wap_land,WTS,binedges)
-            SWK_wap[:,T,P,:], P_wapbin = BA.bony_sorting_part2(ctl_OKwaps,TSK[:,T,P,:],ctl_wap_land,WTS,binedges)
+    ctl_clisccp_wap, ctl_N = BA.bony_sorting_part2(ctl_OKwaps,TCC,ctl_wap_land,WTS,binedges)
+    fut_clisccp_wap, fut_N = BA.bony_sorting_part2(fut_OKwaps,TFC,fut_wap_land,WTS,binedges)
+    LWK_wap, P_wapbin = BA.bony_sorting_part2(ctl_OKwaps,TLK,ctl_wap_land,WTS,binedges)
+    SWK_wap, P_wapbin = BA.bony_sorting_part2(ctl_OKwaps,TSK,ctl_wap_land,WTS,binedges)
 
     return(ctl_clisccp,fut_clisccp,LWkernel_map,SWkernel_map,avgdtas,ctl_clisccp_wap,fut_clisccp_wap,LWK_wap,SWK_wap,ctl_N,fut_N)
-
 
 
 ###########################################################################
@@ -500,7 +508,193 @@ def nanarray(vector):
     this=MV.masked_where(this==0,this)
 
     return this
+    
+###########################################################################
+def obscuration_feedback_terms_general(L_R_bar0,dobsc_fbk,dunobsc_fbk,dobsc_cov_fbk,Klw,Ksw):
+    """
+    Estimate unobscured low cloud feedback, 
+    the low cloud feedback arising solely from changes in obscuration by upper-level clouds,
+    and the covariance term
+    
+    This function takes in a (month,tau,CTP,lat,lon) matrix
+   
+    Klw and Ksw contain just the low bins
+    
+    the following terms are generated in obscuration_terms():
+    dobsc = L_R_bar0 * F_prime
+    dunobsc = L_R_prime * F_bar
+    dobsc_cov = (L_R_prime * F_prime) - climo(L_R_prime * F_prime)
+    """
+    
+    Klw_low = Klw
+    Ksw_low = Ksw
+    L_R_bar0 = 100*L_R_bar0
+    dobsc_fbk = 100*dobsc_fbk
+    dunobsc_fbk = 100*dunobsc_fbk
+    dobsc_cov_fbk = 100*dobsc_cov_fbk
+    
+    LWdobsc_fbk = MV.sum(MV.sum(Klw_low * dobsc_fbk,1),1)
+    LWdunobsc_fbk = MV.sum(MV.sum(Klw_low * dunobsc_fbk,1),1)
+    LWdobsc_cov_fbk = MV.sum(MV.sum(Klw_low * dobsc_cov_fbk,1),1)    
+    
+    SWdobsc_fbk = MV.sum(MV.sum(Ksw_low * dobsc_fbk,1),1)
+    SWdunobsc_fbk = MV.sum(MV.sum(Ksw_low * dunobsc_fbk,1),1)
+    SWdobsc_cov_fbk = MV.sum(MV.sum(Ksw_low * dobsc_cov_fbk,1),1)    
+    
+    ###########################################################################
+    # Further break down the true and apparent low cloud-induced radiation anomalies into components
+    ###########################################################################
+    # No need to break down dobsc_fbk, as that is purely an amount component.
+        
+    # Break down dunobsc_fbk:
+    C_ctl = L_R_bar0
+    dC = dunobsc_fbk
+    C_fut = C_ctl + dC
+    
+    obsc_fbk_output = ZA.KT_decomposition_general(C_ctl,C_fut,Klw_low,Ksw_low)        
+   
+    obsc_fbk_output['LWdobsc_fbk'] = LWdobsc_fbk
+    obsc_fbk_output['LWdunobsc_fbk'] = LWdunobsc_fbk
+    obsc_fbk_output['LWdobsc_cov_fbk'] = LWdobsc_cov_fbk
+    obsc_fbk_output['SWdobsc_fbk'] = SWdobsc_fbk
+    obsc_fbk_output['SWdunobsc_fbk'] = SWdunobsc_fbk
+    obsc_fbk_output['SWdobsc_cov_fbk'] = SWdobsc_cov_fbk
+    
+    return obsc_fbk_output
+        
+###########################################################################
+def obscuration_terms3(c1,c2):
+    """
+    USE THIS VERSION FOR DIFFERENCES OF 2 CLIMATOLOGIES (E.G. AMIP4K, 2xCO2 SLAB RUNS)
+    
+    Compute the components required for the obscuration-affected low cloud feedback
+    These are the terms shown in Eq 4 of Scott et al (2020) DOI: 10.1175/JCLI-D-19-1028.1
+    L_prime = dunobsc + dobsc + dobsc_cov, where
+    dunobsc = L_R_prime * F_bar     (delta unobscured low clouds, i.e., true low cloud feedback)
+    dobsc = L_R_bar * F_prime       (delta obscuration by upper level clouds)
+    dobsc_cov = (L_R_prime * F_prime) - climo(L_R_prime * F_prime)  (covariance term)
+    """
+    # c is [mo,tau,ctp,lat,lon]
+    # c is in percent
+    
+    AX = c2.getAxisList()
+    
+    c1=MV.masked_where(c2.mask,c1)
+    c2=MV.masked_where(c1.mask,c2)
+    
+    # SPLICE c1 and c2:
+    # MAKE SURE c1 and c2 are the same size!!!
+    if c1.shape != c2.shape:
+        raise RuntimeError('c1 and c2 are NOT the same size!!!')
+        
+    c12=np.ma.append(c1,c2,axis=0)    
+    
+    midpt=len(c1)
+           
+    U12 = MV.sum(MV.sum(c12[:,:,2:,:],1),1)/100.
+    
+    L12 = c12[:,:,:2,:]/100.  
+    
+    F12 = 1. - U12
+    F12=MV.masked_less(F12,0)
 
+    F12b = MV.array(np.expand_dims(np.expand_dims(F12,axis=1),axis=1))
+    F12b=MV.masked_where(L12[:,:1,:1,:].mask,F12b)
+    
+    L_R12 = L12/F12b
+    sum_L_R12 = MV.sum(MV.sum(L_R12,1),1)
+    sum_L_R12b = MV.array(np.expand_dims(np.expand_dims(sum_L_R12,axis=1),axis=1))
+    sum_L_R12c = np.broadcast_to(sum_L_R12b,L_R12.shape)
+    this = MV.masked_outside(sum_L_R12c,0,1)
+    L_R12 = MV.masked_where(this.mask,L_R12)
+    
+    L_R12 = MV.masked_where(sum_L_R12c>1,L_R12)
+        
+    L_R_prime,L_R_bar = monthly_anomalies(L_R12)
+    F_prime,F_bar = monthly_anomalies(F12b)    
+    L_prime,L_bar = monthly_anomalies(L12)
+    
+    # Cannot have negative cloud fractions:
+    L_R_bar[L_R_bar<0]=0
+    F_bar[F_bar<0]=0    
+    
+    rep_L_bar = tile_uneven(L_bar,L12)    
+    rep_L_R_bar = tile_uneven(L_R_bar,L_R12)            
+    rep_F_bar = tile_uneven(F_bar,F12b)
+    
+    # Cannot have negative cloud fractions:
+    L_R_bar[L_R_bar<0]=0
+    F_bar[F_bar<0]=0
+
+    dobsc = rep_L_R_bar * F_prime
+    dunobsc = L_R_prime * rep_F_bar
+    prime_prime = (L_R_prime * F_prime)
+
+    dobsc_cov,climo_prime_prime = monthly_anomalies(prime_prime)   
+    
+    # Re-scale these anomalies by 2, since we have computed all anomalies w.r.t. 
+    # the ctl+pert average rather than w.r.t. the ctl average
+    dobsc*=2
+    dunobsc*=2
+    dobsc_cov*=2
+    
+    return(rep_L_R_bar[midpt:],dobsc[midpt:],dunobsc[midpt:],dobsc_cov[midpt:])    
+
+###########################################################################
+def regional_breakdown(data,OCN,LND,area_wts,AX,norm=False):
+    # Compute spatial averages over various geographical regions, for ocean, land, and both
+    # if norm=False (the default), these averages are scaled by the fractional area of the planet over which they occur
+    # if norm=True, these are simply area-weighted averages
+    
+    ocn_area_wts,lnd_area_wts = apply_land_mask_v3(area_wts,OCN,LND)
+    mx = np.arange(10,101,10) # max latitude of region (i.e., from -mx to mx); last one is for Arctic
+    denom = 1
+    reg_dict = {}
+    sections=list(data.keys())
+    surfaces=['all','ocn','lnd']
+    for r in mx:
+        if r==100:
+            region = 'Arctic'
+            domain = cdutil.region.domain(latitude = (70,90))
+        else:
+            region = 'eq'+str(r)
+            domain = cdutil.region.domain(latitude = (-r,r))
+        reg_dict[region]={}
+        for sfc in surfaces:    
+            reg_dict[region][sfc]={}       
+            for sec in sections:
+                reg_dict[region][sfc][sec] = {}
+                DATA = data[sec]
+                names=list(DATA.keys())
+                for name in names:
+                    #reg_dict[region][sfc][sec][name] = {}
+                    fbk = DATA[name]
+                    fbk.setAxisList(AX)
+                    ocn_fbk,lnd_fbk = apply_land_mask_v3(fbk,OCN,LND)
+                    if sfc=='ocn':
+                        wtd_fbk = np.ma.sum(np.ma.sum(domain.select(ocn_fbk*area_wts),1),1)
+                        if norm:
+                            denom = np.ma.sum(np.ma.sum(domain.select(ocn_area_wts),1),1)                             
+                    elif sfc=='lnd':
+                        wtd_fbk = np.ma.sum(np.ma.sum(domain.select(lnd_fbk*area_wts),1),1)
+                        if norm:
+                            denom = np.ma.sum(np.ma.sum(domain.select(lnd_area_wts),1),1)
+                    elif sfc=='all':
+                        wtd_fbk = np.ma.sum(np.ma.sum(domain.select(    fbk*area_wts),1),1)
+                        if norm:
+                            denom = np.ma.sum(np.ma.sum(domain.select(area_wts),1),1)                        
+                    wtd_fbk = wtd_fbk/denom
+                    reg_dict[region][sfc][sec][name] = np.ma.average(wtd_fbk,0)
+                    
+    # reserve spots in the dictionary for asc/dsc feedbacks                    
+    reg_dict['eq30']['ocn_asc']={}
+    reg_dict['eq30']['ocn_dsc']={}
+    for sec in sections:
+        reg_dict['eq30']['ocn_asc'][sec]={}
+        reg_dict['eq30']['ocn_dsc'][sec]={}
+        
+    return(reg_dict)    
+        
 ###########################################################################
 def select_regions(field,region):
     if region == 'eq90':
@@ -519,7 +713,19 @@ def select_regions(field,region):
         inds=np.where((lats[:]>70))
     field_dom = MV.take(field, inds[0], axis=-2)
     return(field_dom)
-
+    
+###########################################################################
+def tile_uneven(data,data_to_match):
+    """extend data to match size of data_to_match even if not a multiple of 12"""
+    
+    A12=len(data_to_match)//12
+    ind=np.arange(12,)
+    rep_ind = np.tile(ind,(A12+1))[:int(len(data_to_match))] # int() added for python3
+    
+    rep_data = MV.array(np.array(data)[rep_ind]) 
+    
+    return rep_data    
+    
 ###########################################################################
 def YEAR(data):
     """
@@ -543,7 +749,7 @@ def YEAR(data):
 ###############################################################################################
 def CloudRadKernel(filenames):
 
-    print('Loading in data')
+    print('Load in data')
     ctl_clisccp,fut_clisccp,LWK,SWK,dTs,ctl_clisccp_wap,fut_clisccp_wap,LWK_wap,SWK_wap,ctl_N,fut_N = get_CRK_data(filenames)
        
     # Create a dummy variable so we don't have keep calling the land mask function:
@@ -551,14 +757,14 @@ def CloudRadKernel(filenames):
     OCN,LND = apply_land_mask_v2(dummy)
     area_wts = get_area_wts(ctl_clisccp[:12,0,0,:]) # summing this over lat and lon = 1
     
-    print('Computing Klein et al error metrics')
+    print('Compute Klein et al error metrics')
     ###########################################################################
     # Compute Klein et al cloud error metrics and their breakdown into components
     ###########################################################################  
     KEM_dict = do_klein_calcs(ctl_clisccp,LWK,SWK,obs_clisccp_AC,ctl_clisccp_wap,LWK_wap,SWK_wap,obs_clisccp_AC_wap,obs_N_AC_wap)
     # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]
 
-    print('Computing feedbacks')
+    print('Compute feedbacks')
     ###########################################################################
     # Compute cloud feedbacks and their breakdown into components
     ###########################################################################         
@@ -568,14 +774,14 @@ def CloudRadKernel(filenames):
     
     AX = ctl_clisccp[:12,0,0,:].getAxisList()             
 
-    fbk_dict = {}
 
     # The following performs the amount/altitude/optical depth decomposition of
-    # Zelinka et al., J Climate (2012b), as modified in Zelinka et al., J. Climate (2013)    
+    # Zelinka et al., J Climate (2012b), as modified in Zelinka et al., J. Climate (2013)  
+    output={}  
+    output_wap={}  
     for sec in sections:
         print('    for section '+sec)
         # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]       
-        fbk_dict[sec] = {}
         
         PP=sec_dic[sec]   
 
@@ -584,36 +790,7 @@ def CloudRadKernel(filenames):
         Klw = LWK_base[:,:,PP,:]
         Ksw = SWK_base[:,:,PP,:]
        
-        output1 = ZA.KT_decomposition_general(C1,C2,Klw,Ksw)
-        #(LWcld_tot,LWcld_amt,LWcld_alt,LWcld_tau,LWcld_err,SWcld_tot,SWcld_amt,SWcld_alt,SWcld_tau,SWcld_err,dc_star,dc_prop)=output1
-        names = ['LWcld_tot','LWcld_amt','LWcld_alt','LWcld_tau','LWcld_err','SWcld_tot','SWcld_amt','SWcld_alt','SWcld_tau','SWcld_err']
-
-        # Compute spatial averages over various geographical regions, for ocean, land, and both:
-        mx = np.arange(10,101,10) # max latitude of region (i.e., from -mx to mx); last one is for Arctic
-        for n,name in enumerate(names):
-            # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]       
-            fbk_dict[sec][name] = {}
-            data = output1[n]
-            data.setAxisList(AX)
-            ocn_data,lnd_data = apply_land_mask_v3(data,OCN,LND)
-            for r in mx:
-                if r==100:
-                    region = 'Arctic'
-                    domain = cdutil.region.domain(latitude = (70,90))
-                else:
-                    region = 'eq'+str(r)
-                    domain = cdutil.region.domain(latitude = (-r,r))
-                # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]
-                fbk_dict[sec][name][region] = {}
-                ocn = np.ma.average(np.ma.sum(np.ma.sum(domain.select(ocn_data*area_wts),1),1),0)
-                lnd = np.ma.average(np.ma.sum(np.ma.sum(domain.select(lnd_data*area_wts),1),1),0)
-                all = np.ma.average(np.ma.sum(np.ma.sum(domain.select(    data*area_wts),1),1),0)
-                # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]
-                fbk_dict[sec][name][region]['all'] = all
-                fbk_dict[sec][name][region]['ocn'] = ocn
-                fbk_dict[sec][name][region]['lnd'] = lnd
-                fbk_dict[sec][name][region]['ocn_asc'] = np.nan # these will later be replaced for eq30 only
-                fbk_dict[sec][name][region]['ocn_dsc'] = np.nan # these will later be replaced for eq30 only 
+        output[sec] = ZA.KT_decomposition_general(C1,C2,Klw,Ksw)
     
         dummy,LWK_wap_base = compute_fbk(LWK_wap,LWK_wap,dTs) 
         dummy,SWK_wap_base = compute_fbk(SWK_wap,SWK_wap,dTs)    
@@ -626,30 +803,72 @@ def CloudRadKernel(filenames):
         N2 = fut_N[:,:-1]
         
         # no breakdown (this is identical to within + between + covariance)
-        a = np.moveaxis(C1,1,0)
-        b = np.moveaxis(a,2,1)              # [TAU,CTP,month,regime]
-        C1N1 = np.moveaxis(b*N1,2,0)       # [month,TAU,CTP,regime]
-        a = np.moveaxis(C2,1,0)
-        b = np.moveaxis(a,2,1)              # [TAU,CTP,month,regime]
-        C2N2 = np.moveaxis(b*N2,2,0)       # [month,TAU,CTP,regime]
+        C1b = np.moveaxis(np.moveaxis(C1,1,0),2,1)  # [TAU,CTP,month,regime]
+        C1N1 = np.moveaxis(C1b*N1,2,0)              # [month,TAU,CTP,regime]
+        C2b = np.moveaxis(np.moveaxis(C2,1,0),2,1)  # [TAU,CTP,month,regime]
+        C2N2 = np.moveaxis(C2b*N2,2,0)              # [month,TAU,CTP,regime]
         pert,C_base = compute_fbk(C1N1,C2N2,dTs) 
-        output2 = ZA.KT_decomposition_general(C_base, C_base+pert, Klw, Ksw)
+        output_wap[sec] = ZA.KT_decomposition_general(C_base, C_base+pert, Klw, Ksw)
 
-        # Put all the ascending and descending region quantities in a dictionary
-        for n,name in enumerate(names):
-            # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]
-            fbk_dict[sec][name]['eq30']['ocn_asc'] = np.ma.average(np.sum((output2[n])[:,:cutoff],1),0)
-            fbk_dict[sec][name]['eq30']['ocn_dsc'] = np.ma.average(np.sum((output2[n])[:,cutoff:],1),0)                                               
     # end for sec in sections  
+    
+                                            
+    
+    ###########################################################################
+    # Compute obscuration feedback components
+    ###########################################################################  
+    sec='LO680' # this should already be true, but just in case...
+    PP=sec_dic[sec]  
+    PP=sec_dic[sec]   
+    print('Get Obscuration Terms')
+    CTL,FUT = ctl_clisccp,fut_clisccp
+    LWK = LWK_base[:,:,PP,:]
+    SWK = SWK_base[:,:,PP,:]
+    obsc_output={}
+    obsc_output[sec] = do_obscuration_calcs(CTL,FUT,LWK,SWK,dTs)
+    
+    # Do this for the omega-regimes too:
+    C1 = np.moveaxis(ctl_clisccp_wap,0,-1)
+    N1 = np.moveaxis(ctl_N,0,-1)
+    CTL = np.moveaxis(C1*N1,-1,0)[...,:-1] # ignore the land bin
+    C2 = np.moveaxis(fut_clisccp_wap,0,-1)
+    N2 = np.moveaxis(fut_N,0,-1)
+    FUT = np.moveaxis(C2*N2,-1,0)[...,:-1] # ignore the land bin
+    LWK = LWK_wap_base[:,:,PP,:-1] # ignore the land bin
+    SWK = SWK_wap_base[:,:,PP,:-1] # ignore the land bin
+    obsc_output_wap={}
+    obsc_output_wap[sec] = do_obscuration_calcs(CTL,FUT,LWK,SWK,dTs)           
 
-    fbk_dict['metadata'] = {}
+    
+    ###########################################################################
+    # Compute regional averages (weighted by fraction of globe); place in dictionary
+    ########################################################################### 
+    print('Compute regional averages') 
+    # [region][sfc][sec][name] 
+    obsc_fbk_dict = regional_breakdown(obsc_output,OCN,LND,area_wts,AX)
+    fbk_dict = regional_breakdown(output,OCN,LND,area_wts,AX)   
+    
+    # Put all the ascending and descending region quantities in a dictionary
+    names=list(output_wap['ALL'].keys())
+    for sec in sections:
+        for name in names:
+            fbk_dict['eq30']['ocn_asc'][sec][name] = np.ma.average(np.sum((output_wap[sec][name])[:,:cutoff],1),0)
+            fbk_dict['eq30']['ocn_dsc'][sec][name] = np.ma.average(np.sum((output_wap[sec][name])[:,cutoff:],1),0)  
+              
+    sec='LO680'
+    names=list(obsc_output_wap[sec].keys())
+    for name in names:
+        obsc_fbk_dict['eq30']['ocn_asc'][sec][name] = np.ma.average(np.sum((obsc_output_wap[sec][name])[:,:cutoff],1),0)
+        obsc_fbk_dict['eq30']['ocn_dsc'][sec][name] = np.ma.average(np.sum((obsc_output_wap[sec][name])[:,cutoff:],1),0)  
+        
     meta = {
     "date_modified" :   str(date.today()),
     "author"        :   "Mark D. Zelinka <zelinka1@llnl.gov>",
     }
     fbk_dict['metadata'] = meta
+    obsc_fbk_dict['metadata'] = meta
 
     # [sec][flavor][region][all / ocn / lnd / ocn_asc / ocn_dsc]
-    return(fbk_dict,KEM_dict)
+    return(fbk_dict,obsc_fbk_dict,KEM_dict)
         
     
