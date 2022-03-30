@@ -23,7 +23,7 @@ git clone https://github.com/mzelinka/assessed-cloud-fbks.git
 
 6. Run the code:
 ```
-python main.py
+python main.py -p my_param.py
 ```
 7. Inspect the generated figures and tables in the /figures/ directory.
 
