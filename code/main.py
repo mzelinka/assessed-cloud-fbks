@@ -111,16 +111,12 @@ print(
     "get_ecs:", get_ecs
 )
 
-#import sys
-#sys.exit('TEST')
-
 if get_ecs:
     exps = ['amip','amip-p4K','piControl','abrupt-4xCO2']
 else:
     exps = ['amip','amip-p4K']
 
 # generate xmls pointing to the cmorized netcdf files 
-#os.system('mkdir ../xmls/')
 os.makedirs(xml_path, exist_ok=True)
 filenames={}
 for exp in exps:
@@ -138,9 +134,7 @@ for exp in exps:
             table='CFmon'
         else:
             table='Amon'
-        #searchstring = path+'/'+activity+'/'+institution+'/'+model+'/'+exp+'/'+variant+'/'+table+'/'+field+'/'+grid_label+'/'+version+'/*.nc'
         searchstring = os.path.join(path, activity, institution, model, exp, variant, table, field, grid_label, version, '*.nc')
-        #xmlname = '../xmls/'+exp+'.'+model+'.'+variant+'.'+field+'.'+version+'.xml'
         xmlname = os.path.join(xml_path, exp+'.'+model+'.'+variant+'.'+field+'.'+version+'.xml')
         os.system('cdscan -x '+xmlname+' '+searchstring)
         filenames[exp][field] = xmlname
@@ -159,7 +153,6 @@ if get_ecs:
 updated_ecs_dict = OJ.organize_ecs_jsons(ecs,model,variant)
 
 # plot this model alongside other models and expert assessment:
-#os.system('mkdir ../figures/')
 os.makedirs(figure_path, exist_ok=True)
 result = dataviz.make_all_figs(updated_fbk_dict,updated_obsc_fbk_dict,updated_err_dict,updated_ecs_dict,model)
 
