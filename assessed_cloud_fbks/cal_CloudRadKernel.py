@@ -15,8 +15,8 @@ import MV2 as MV
 import numpy as np
 from datetime import date 
 from genutil import grower
-import bony_analysis as BA
-import zelinka_analysis as ZA
+import assessed_cloud_fbks.bony_analysis as BA
+import assessed_cloud_fbks.zelinka_analysis as ZA
 
 datadir='../data/'
 
