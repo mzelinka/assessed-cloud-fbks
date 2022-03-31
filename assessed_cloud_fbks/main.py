@@ -1,7 +1,9 @@
-import cal_CloudRadKernel as CRK
-import compute_ECS as CE
-import organize_jsons as OJ
-import cld_fbks_ecs_assessment_v3 as dataviz
+#!/usr/bin/env python
+
+import assessed_cloud_fbks.cal_CloudRadKernel as CRK
+import assessed_cloud_fbks.compute_ECS as CE
+import assessed_cloud_fbks.organize_jsons as OJ
+import assessed_cloud_fbks.cld_fbks_ecs_assessment_v3 as dataviz
 import os
 
 # User Input:
