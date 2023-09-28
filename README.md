@@ -3,30 +3,20 @@
 [![DOI](https://zenodo.org/badge/353136800.svg)](https://zenodo.org/badge/latestdoi/353136800)
 
 ## Description
-This code performs the analysis of [Zelinka et al. (2022)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021JD035198). It computes GCM cloud feedback components and compares them to the expert-assessed values from [Sherwood et al. (2020)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019RG000678). 
+A Jupyter notebook is provided that performs the analysis of [Zelinka et al. (2022)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021JD035198). It computes GCM cloud feedback components and compares them to the expert-assessed values from [Sherwood et al. (2020)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019RG000678). Figures are generated in the notebook and also saved to the [figures directory](https://github.com/mzelinka/assessed-cloud-fbks/tree/main/figures).
 
-## Instructions
-To use, follow these steps:
-1. Install CDAT via conda following [these instructions](https://github.com/CDAT/cdat/wiki/install#installing-latest-cdat---821)
-
-2. Activate this environment:
+## Packages Needed
+----------
+- [xcdat](https://xcdat.readthedocs.io/en/stable/)
+- xarray
+- numpy
+- scipy
+- matplotlib<br>
+...all of which can be installed via conda:
 ```
-conda activate cdat
+conda create -n <ENV_NAME> -c conda-forge xcdat xesmf xarray numpy matplotlib 
+conda activate <ENV_NAME>
 ```
-3. Clone this repo:
-```
-git clone https://github.com/mzelinka/assessed-cloud-fbks.git
-```
-4. cd to assessed-cloud-fbks/code/
-
-5. In main.py, update the "User Input" section so it points to your model's amip and amip-p4K files.
-
-6. Run the code:
-```
-python main.py
-```
-7. Inspect the generated figures and tables in the /figures/ directory.
-
 
 ## References
 - Zelinka et al. (2022): [Evaluating climate models’ cloud feedbacks against expert judgement](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021JD035198), <em>J. Geophys. Res.</em>, 127, e2021JD035198, doi:10.1029/2021JD035198.
