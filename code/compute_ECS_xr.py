@@ -99,15 +99,15 @@ def get_data(pi,ab):
     
     return(runcntl,annanom)
 
-def compute_abrupt_anoms(pifilepath,abfilepath):
+def compute_abrupt_anoms(filepath):
     # compute annual- anad global-mean tas and EEI anomalies in abrupt4xCO2 w.r.t. piControl climo, then compute ERF, lambda, and ECS via Gregory
     cntl={}
     anom={}
     skip=False
-    variables = list(pifilepath.keys())
+    variables = list(filepath["piControl"].keys())
     for var in variables:
-        pi=xcdat.open_mfdataset(pifilepath[var], use_cftime = True)
-        ab=xcdat.open_mfdataset(abfilepath[var], use_cftime = True)
+        pi=xcdat.open_mfdataset(filepath["piControl"][var], use_cftime = True)
+        ab=xcdat.open_mfdataset(filepath["abrupt-4xCO2"][var], use_cftime = True)
         
         if len(ab.time)<140*12:
             print('   len(ab.time)<140*12')
