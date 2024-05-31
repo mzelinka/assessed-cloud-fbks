@@ -27,6 +27,14 @@ sections = ["ALL", "HI680", "LO680"]
 Psections = [slice(0, 7), slice(2, 7), slice(0, 2)]
 sec_dic = dict(zip(sections, Psections))
 
+# Define the grid
+LAT = np.arange(-89,91,2.0)
+LON = np.arange(1.25,360,2.5)
+# output_grid = xc.regridder.grid.create_grid(lat=LAT, lon=LON)
+lat_axis = xc.create_axis("lat", LAT)
+lon_axis = xc.create_axis("lon", LON)
+output_grid = xc.create_grid(x=lon_axis, y=lat_axis)
+
 # 10 hPa/dy wide bins:
 width = 10
 binedges = np.arange(-100, 100, width)
@@ -68,14 +76,14 @@ def get_amip_data(filename, var, lev=None):
     ).load()
     if lev:
         f = f.sel(time=tslice, plev=lev)
-        f = f.drop_vars(["plev", "plev_bnds"])
+        # f = f.drop_vars(["plev", "plev_bnds"])
     else:
         f = f.sel(time=tslice)
 
     # Compute climatological monthly means
     avg = f.temporal.climatology(var, freq="month", weighted=True)
     # Regrid to cloud kernel grid
-    output_grid = xc.create_grid(land_mask.lat.values, land_mask.lon.values)
+    # output_grid = xc.create_grid(land_mask.lat.values, land_mask.lon.values)
     output = avg.regridder.horizontal(
         var, output_grid, tool="xesmf", method="bilinear", extrap_method="inverse_dist"
     )
@@ -642,7 +650,8 @@ def xc_to_dataset(idata):
     idata = idata.to_dataset(name="data")
     if "height" in idata.coords:
         idata = idata.drop("height")
-    idata = idata.bounds.add_missing_bounds()
+    # idata = idata.bounds.add_missing_bounds()
+    idata = idata.bounds.add_missing_bounds(axes=['X', 'Y', 'T'])
     return idata
 
 
@@ -653,8 +662,8 @@ def monthly_anomalies(idata):
     usage:
     anom,avg = monthly_anomalies(data)
     """
-    idata = xc_to_dataset(idata)
     idata["time"].encoding["calendar"] = "noleap"
+    idata = xc_to_dataset(idata)
     clim = idata.temporal.climatology("data", freq="month", weighted=True)
     anom = idata.temporal.departures("data", freq="month", weighted=True)
 
